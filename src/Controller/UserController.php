@@ -15,6 +15,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use App\Service\FileUploader;
 
 // #[isGranted("ROLE_RH")]
 #[Route('/user')]
@@ -32,11 +33,14 @@ class UserController extends AbstractController
     #[Route('/{id}/edit', name: 'app_user_edit', requirements: ["id" => "\d+"], methods: ['GET', 'POST'])]
     public function new(User $user = null, Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
+        $template= "user/edit.html.twig";
         if ($user === null) {
             $user = new User();
+            $template = "user/new.html.twig";
         }
         
-        $form = $this->createForm(UserType::class, $user);
+        $r = $user->getId() === null ? true : false;
+        $form = $this->createForm(UserType::class, $user, ["requiredImg"=>$r]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -48,7 +52,7 @@ class UserController extends AbstractController
                 $newFilename = $safeFilename . '-' . uniqid() . '.' . $picture->guessExtension();
                 try {
                     $picture->move(
-                        $this->getParameter('Images'),
+                        $this->getParameter('upload_directory'),
                         $newFilename
                     );
                 } catch (FileException $e) {
@@ -59,30 +63,22 @@ class UserController extends AbstractController
                         'error' => $errorMessage,
                     ]);
                 }
-                $picture->setPicture($newFilename);
+                $user->setPicture($newFilename);
             }
-            if ($user->getId() === null) {
-                $entityManager->persist($user);
-                $entityManager->flush();
 
-                return $this->redirectToRoute('app_user_index');
-                return $this->renderForm('user/new.html.twig', [
-                    'user' => $user,
-                    'form' => $form,
-                ]);
-            }
-            
+            $entityManager->persist($user);
             $entityManager->flush();
-            
-            return $this->redirectToRoute('app_user_index');
-        }
 
-        return $this->renderForm('user/edit.html.twig', [
-            'user' => $user,
-            'form' => $form,
-        ]);
+            return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+        }
+       
+            return $this->renderForm($template, [
+                'user' => $user,
+                'form' => $form,
+            ]);
+        
     }
-    
+
 
     #[Route('/{id}', name: 'app_user_show', requirements: ["id" => "\d+"], methods: ['GET'])]
     public function show(User $user, $id): Response
@@ -95,7 +91,7 @@ class UserController extends AbstractController
     #[Route('/{id}', name: 'app_user_delete', methods: ['POST'])]
     public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->request->get('_token'))) {
             $entityManager->remove($user);
             $entityManager->flush();
         }

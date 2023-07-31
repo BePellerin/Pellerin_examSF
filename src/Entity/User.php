@@ -181,13 +181,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getDatesortie(): ?string
+    public function getDatesortie()  
     {
-        if ($this->datesortie instanceof \DateTimeInterface) {
-            return $this->datesortie->format('d-m-y ');
-        }
+        return $this->datesortie;
+        // if ($this->datesortie instanceof \DateTimeInterface) {
+        //     return $this->datesortie->format('d-m-y');
+        // }
 
-        return null;
+        // return null;
     }
 
     public function setDatesortie(?\DateTimeInterface $datesortie): static

@@ -4,7 +4,7 @@
 
 {% block body %}
 <h1>Editer un employé</h1>
-<form class="table table-dark">
+<div class="table table-dark">
 
 
     {{ include('user/_form.html.twig', {'button_label': 'Mise à jour'}) }}
@@ -12,6 +12,6 @@
 
     <a href="{{ path('app_user_index')}}" <button class="btn btn-outline-primary" type="submit">Retour à la liste</button></a></div>
 
-</form>
+</div>
 
 {% endblock %}
