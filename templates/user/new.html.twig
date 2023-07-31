@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvel employé{% endblock %}
+
+{% block body %}
+<h1>Créer un nouvel employé</h1>
+
+<form class="table table-dark">
+
+
+    
+
+    {{ include('user/_form.html.twig') }}
+    {# {{ form_row(form.picture) }} #}
+
+
+    <a href="{{ path('app_user_index')}}" <button class="btn btn-outline-primary" type="submit">Retour à la liste</button></a></div>
+    </form>
+{% endblock %}

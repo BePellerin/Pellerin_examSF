@@ -3,11 +3,9 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-// use App\Entity\Assert\Length;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -19,56 +17,53 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[Assert\NotBlank(message:"Veuillez remplir ce champ.")]
-    #[ORM\Column(length: 180, unique: true)]
+    #[ORM\Column(length: 180, unique: false)]
     private ?string $lastname = null;
 
     #[Assert\NotBlank(message: "Veuillez remplir ce champ.")]
-    #[ORM\Column(length: 180, unique: true)]
+    #[ORM\Column(length: 180, unique: false)]
     private ?string $username = null;
 
-    /**
-     * @Assert\Choice(choices={"ROLE_USER", "ROLE_USER"})
-     */
     #[Assert\NotBlank(message: "Veuillez choisir un rôle.")]
     #[ORM\Column]
-    private array $roles = [];
+    private array $roles = ["ROLE_RH","ROLE_USER"];
 
     /**
      * @Assert\Choice(choices={"RH", "Informatique", "Comptabilité", "Direction"})
      */
     #[Assert\NotBlank(message: "Veuillez choisir un secteur.")]
-    #[ORM\Column(length: 12, unique: true)]
+    #[ORM\Column(length: 12, unique: false)]
     private ?string $secteur = null;
 
     /**
      * @Assert\Choice(choices={"CDI", "CDD", "Interim"})
      */
     #[Assert\NotBlank(message: "Veuillez choisir un type.")]
-    #[ORM\Column(length: 7, unique: true)]
+    #[ORM\Column(length: 7, unique: false)]
     private ?string $typecontrat = null;
 
     /**
      * @Assert\NotBlank(groups={"cdd_interim"})
-     * */
+     */
     #[Assert\Range(
         min: 'now',
-        max: '+50 years',
+        minMessage:"La date doit être supèrieur à la date d'aujourd'hui"
     )]
-    #[Assert\Date]
+    #[Assert\DateTime(format:"d-m-Y")]
     #[ORM\Column(type:"date", nullable: true)]
     private ?\DateTimeInterface $datesortie = null;
 
     /**
-     * @Assert\Length(min: "8", minMessage = "Le nom doit faire au moins {{ limit }} caractères.")
-     * @Assert\Regex(
-     *     pattern="/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]$/",
-     *     message="Le mot de passe doit contenir au moins une lettre et un chiffre."
-     * )
      * @var string The hashed password
      */
+    #[Assert\Length(min: "8", minMessage:"Le nom doit faire au moins {{ limit }} caractères.")]
+    #[Assert\Regex(pattern: "/^(?=.*[A-Za-z])(?=.*\d)[\w\d]+$/",message:"Le mot de passe doit contenir au moins une lettre et un chiffre.")]
     #[Assert\NotBlank(message: "Veuillez remplir ce champ.")]
     #[ORM\Column]
     private ?string $password = null;
+
+    #[ORM\Column(type: 'string')]
+    private string $picture;
 
     public function getId(): ?int
     {
@@ -95,6 +90,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getUserIdentifier(): string
     {
         return (string) $this->lastname;
+    }
+
+    public function hasRole($role){
+        $return = false;
+        foreach ($this->roles as $roleParcours){
+            if($role == $roleParcours){
+            $return = true;
+            }
+        }
+        return $return;
     }
 
     /**
@@ -176,14 +181,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getDatesortie(): ?\DateTimeInterface
+    public function getDatesortie(): ?string
     {
-        return $this->datesortie;
+        if ($this->datesortie instanceof \DateTimeInterface) {
+            return $this->datesortie->format('d-m-y ');
+        }
+
+        return null;
     }
 
     public function setDatesortie(?\DateTimeInterface $datesortie): static
     {
         $this->datesortie = $datesortie;
+
+        return $this;
+    }
+
+    public function getPicture(): string
+    {
+        return $this->picture;
+    }
+
+    public function setPicture(string $picture): self
+    {
+        $this->picture = $picture;
 
         return $this;
     }

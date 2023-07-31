@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Employés{% endblock %}
+
+{% block body %}
+    <h1>Liste des employés</h1>
+
+<table class="table table-dark">
+
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Secteur</th>
+                <th>Type de contrat</th>
+{% if app.user.hasRole("ROLE_RH") %}
+
+<th>Date de sortie</th>{% endif %}
+
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.lastname }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.secteur }}</td>
+                <td>{{ user.typecontrat }}</td>
+{% if user.datesortie is not null %}
+	<td>{{ user.datesortie ? user.datesortie|date('d-m-Y') : '' }}</td>
+{% else %}
+	<td>Date de sortie non définie</td>
+{% endif %}
+
+
+ <td>
+                <a href="{{ path('app_user_show', {'id': user.id}) }}">Voir</a>
+                &nbsp;
+                {% if app.user.hasRole("ROLE_RH") %}
+                <a href="{{ path('app_user_edit', {'id': user.id}) }}">Editer</a>
+                {% endif %}
+
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="9">Enregistrement non trouvé</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

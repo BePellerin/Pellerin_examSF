@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profile
+{% endblock %}
+
+
+{% block body %}
+    <h1>Profile</h1>
+
+<table class="table table-dark">
+
+        <tbody>
+            <tr>
+                <th>Lastname</th>
+                <td>{{ user.lastname }}</td>
+            </tr>
+            <tr>
+                <th>Username</th>
+                <td>{{ user.username }}</td>
+            </tr>
+            {% if app.user.hasRole("ROLE_RH") %}
+
+            <tr>
+                <th>Roles</th>
+                <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
+            </tr>{% endif %}
+
+            <tr>
+                <th>Secteur</th>
+                <td>{{ user.secteur }}</td>
+            </tr>
+            <tr>
+                <th>Typecontrat</th>
+                <td>{{ user.typecontrat }}</td>
+            </tr>
+            <tr>
+                <th>Datesortie</th>
+
+	{% if user.datesortie is not null %}
+		<td>{{ user.datesortie ? user.datesortie|date('Y-m-d') : '' }}</td>
+	{% else %}
+<td>Date de sortie non définie</td>
+
+	{% endif %}
+
+
+            </tr>
+        </tbody>
+    </table>
+<a href="{{ path('app_user_index')}}" <button class="btn btn-outline-primary" type="submit">Retour à la liste</button></a></div>
+
+{% if app.user.hasRole("ROLE_RH") %}
+<a href="{{ path('app_user_edit', {'id': user.id})}}" <button class="btn btn-outline-primary" type="submit">Editer</button></a></div>
+
+{% endif %}
+
+
+    {{ include('user/_delete_form.html.twig') }}
+{% endblock %}
