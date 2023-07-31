@@ -14,8 +14,8 @@
                 <th>Secteur</th>
                 <th>Type de contrat</th>
 {% if app.user.hasRole("ROLE_RH") %}
-
-<th>Date de sortie</th>{% endif %}
+<th>Date de sortie</th>
+{% endif %}
 
                 <th>actions</th>
             </tr>
@@ -29,12 +29,11 @@
                 <td>{{ user.typecontrat }}</td>
 {% if app.user.hasRole("ROLE_RH") %}
 
-{% if user.datesortie is not null %}
-<td>{{ user.datesortie ? user.datesortie|date('d-m-Y') : '' }}</td>
-
-{% else %}
+    {% if user.datesortie is not null %}
+    <td>{{ user.datesortie ? user.datesortie|date('d-m-Y') : '' }}</td>
+    {% else %}
 	<td>Date de sortie non définie</td>
-{% endif %}
+    {% endif %}
 {% endif %}
 
 
