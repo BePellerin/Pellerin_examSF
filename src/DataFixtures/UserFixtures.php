@@ -22,10 +22,10 @@ class UserFixtures extends Fixture
     {
 
         $tab = array(
-            array('lastname' => 'Pompon', 'username' => 'Nathalie', 'datesortie' => null, 'roles' => ["ROLE_RH"], 'secteur' => 'RH', 'typecontrat' => 'CDI', 'password' => 'rh123@'),
-            array('lastname' => 'Pompon', 'username' => 'Jérôme', 'datesortie' => '04-07-2024', 'roles' => ["ROLE_USER"],  'secteur' => 'Informatique', 'typecontrat' => 'Interim', 'password' => 'jerome'),
-            array('lastname' => 'Chiesa', 'username' => 'Josiane', 'datesortie' => '04-07-2025', 'roles' => ["ROLE_USER"], 'secteur' => 'Comptabilité', 'typecontrat' => 'CDD', 'password' => 'josiane'),
-            array('lastname' => 'Dupont', 'username' => 'Eric', 'datesortie' => null, 'roles' => ["ROLE_USER"], 'secteur' => 'Direction', 'typecontrat' => 'CDI', 'password' => 'eric')
+            array('lastname' => 'Pompon', 'username' => 'Nathalie', 'datesortie' => null, 'roles' => ["ROLE_RH"], 'secteur' => 'RH', 'typecontrat' => 'CDI', 'password' =>'rh123@', 'picture' => " "),
+            array('lastname' => 'Pompon', 'username' => 'Jérôme', 'datesortie' => '04-07-2024', 'roles' => ["ROLE_USER"],  'secteur' => 'Informatique', 'typecontrat' => 'Interim', 'password' =>'jerome', 'picture' => " "),
+            array('lastname' => 'Chiesa', 'username' => 'Josiane', 'datesortie' => '04-07-2025', 'roles' => ["ROLE_USER"], 'secteur' => 'Comptabilité', 'typecontrat' => 'CDD', 'password' =>'josiane', 'picture' => " "),
+            array('lastname' => 'Dupont', 'username' => 'Eric', 'datesortie' => null, 'roles' => ["ROLE_USER"], 'secteur' => 'Direction', 'typecontrat' => 'CDI', 'password' => 'eric', 'picture' => " ")
         );
 
         foreach ($tab as $row) {
@@ -35,6 +35,7 @@ class UserFixtures extends Fixture
             $user->setRoles($row['roles']);
             $user->setSecteur($row['secteur']);
             $user->setTypecontrat($row['typecontrat']);
+            $user->setPicture($row['picture']);
             if ($row['datesortie']) {
                 $formattedDateSortie = \DateTime::createFromFormat('d-m-Y', $row['datesortie']);
                 if ($formattedDateSortie !== false) {

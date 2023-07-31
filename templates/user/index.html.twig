@@ -27,10 +27,14 @@
                 <td>{{ user.username }}</td>
                 <td>{{ user.secteur }}</td>
                 <td>{{ user.typecontrat }}</td>
+{% if app.user.hasRole("ROLE_RH") %}
+
 {% if user.datesortie is not null %}
-	<td>{{ user.datesortie ? user.datesortie|date('d/m/Y') : '' }}</td>
+<td>{{ user.datesortie ? user.datesortie|date('d-m-Y') : '' }}</td>
+
 {% else %}
 	<td>Date de sortie non définie</td>
+{% endif %}
 {% endif %}
 
 

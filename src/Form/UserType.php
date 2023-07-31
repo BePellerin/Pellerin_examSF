@@ -18,41 +18,43 @@ class UserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('lastname', null, ["attr" => ["placeholder" => "Ajouter un Nom"]])
-            ->add('username', null, ["attr" => ["placeholder" => "Ajouter un Prénom"]])
-        ->add('roles', ChoiceType::class, [
-            'mapped' => false,
-            'label' => 'Rôle',
-            'choices' => [
-                'USER' => 'ROLE_USER',
-                'RH' => 'ROLE_RH'
-                
-            ],
-        ])
+            ->add('lastname', null, ['label' => 'Nom', "attr" => ["placeholder" => "Ajouter un Nom"]])
+            ->add('username', null, ['label' => 'Prénom', "attr" => ["placeholder" => "Ajouter un Prénom"]])
+            ->add('roles', ChoiceType::class, [
+                'mapped' => false,
+                'label' => 'Rôle',
+                'choices' => [
+                    'USER' => 'ROLE_USER',
+                    'RH' => 'ROLE_RH'
+
+                ],
+            ])
             ->add('secteur', ChoiceType::class, [
                 'choices' => [
-                'RH' => 'RH',
-                'Informatique' => 'Informatique',
-                'Comptabilité' => 'Comptabilité',
-                'Direction' => 'Direction',
-                ]])
+                    'RH' => 'RH',
+                    'Informatique' => 'Informatique',
+                    'Comptabilité' => 'Comptabilité',
+                    'Direction' => 'Direction',
+                ]
+            ])
             ->add('typecontrat', ChoiceType::class, [
+                'label' => 'Type de contrat',
                 'choices' => [
                     'CDI' => 'CDI',
                     'CDD' => 'CDD',
                     'Interim' => 'Interim',
-                ]])
+                ]
+            ])
             ->add('datesortie', DateType::class, [
-            // 'placeholder' => ['year' => 'Année', 'month' => 'Mois', 'day' => 'Jour',],
-            //  'placeholder' => ["Jour/Mois/Année",],
+                'label' => 'Date de sortie',
                 'widget' => 'single_text',
                 // 'input'  => 'datetime_immutable',
-                'format' => 'd/m/Y',
+                'format' => 'dd-MM-yyyy',
                 'required' => false,
                 'html5' => false,
             ])
             ->add('picture', FileType::class, [
-                'label' => 'Image (JPG file)',
+                'label' => 'Photo',
                 'mapped' => false,
                 'required' => $options["requiredImg"],
                 'constraints' => [
@@ -66,10 +68,8 @@ class UserType extends AbstractType
                 ],
             ])
             // ...
-        
+
             ->add('password', null, ["attr" => ["placeholder" => "Ajouter un mot de passe"]]);
-            
-            
     }
 
     public function configureOptions(OptionsResolver $resolver): void

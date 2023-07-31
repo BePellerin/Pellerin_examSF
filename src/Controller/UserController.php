@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserType;
-use App\Form\UserEditType;
+// use App\Form\UserEditType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,8 +14,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-use App\Service\FileUploader;
+// use Symfony\Component\HttpFoundation\File\UploadedFile;
+// use App\Service\FileUploader;
 
 // #[isGranted("ROLE_RH")]
 #[Route('/user')]
@@ -31,6 +31,7 @@ class UserController extends AbstractController
 
     #[Route('/new', name: 'app_user_new', methods: ['GET', 'POST'])]
     #[Route('/{id}/edit', name: 'app_user_edit', requirements: ["id" => "\d+"], methods: ['GET', 'POST'])]
+    #[isGranted("ROLE_RH")]
     public function new(User $user = null, Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
         $template= "user/edit.html.twig";
@@ -89,6 +90,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_user_delete', methods: ['POST'])]
+    #[isGranted("ROLE_RH")]
     public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->request->get('_token'))) {

@@ -49,9 +49,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         min: 'now',
         minMessage:"La date doit être supèrieur à la date d'aujourd'hui"
     )]
-    #[Assert\DateTime(format:"d-m-Y")]
+    #[Assert\DateTime(format: "d-m-Y")]
     #[ORM\Column(type:"date", nullable: true)]
     private ?\DateTimeInterface $datesortie = null;
+    
 
     /**
      * @var string The hashed password
